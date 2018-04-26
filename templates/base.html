@@ -2,22 +2,43 @@
 <html>
     <head>
         <title>{{title}}</title>
+        <style type="text/css">
+            .error {
+                color: red;
+            }
+        </style>
     </head>
 <body>
     <main>
         <nav>
-            <a href='/blog'>Main Blog Page</a>
+            <a href='/'>Home</a> |
+            <a href='/blog'>All Blog Posts</a> |
             <a href='/newpost'>Create New Blog Post</a>
         </nav>
+        <div style='float: right'>
+            {% if 'user' in session %}
+              {{ session['user'] }}
+              <form action="/logout" method="post" id='logout'>
+                <input type="submit" value="Log Out" />
+              </form>
+            {% else %}
+              <a href="login">Login</a> | <a href="signup">Create Account</a>
+            {% endif %}
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 
         {% block content %}
         {% endblock %}
 
-        {% with messages = get_flashed_messages() %}
-            {% for message in messages %}
-            <p>{{message}}</p>
-            {% endfor %}
-        {% endwith %}
 
     </main>
 </body>
